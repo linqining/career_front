@@ -1,6 +1,7 @@
 // import  { App } from 'vue';
 // 引入 login.ts
 import LoginRouter from './modules/login';
+
 // 引入 test.ts
 import TestRouter from './modules/test';
 import { createRouter, createWebHashHistory } from 'vue-router';
@@ -8,10 +9,22 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 export const publicRoutes= [
     ...LoginRouter,
     ...TestRouter,
+    // {
+    //     path: '/home',
+    //     name: 'homeIndex',
+    //     component: () => import('@/views/home/homeIndex.vue'),
+    //
+    // },
     {
-        path: '/home',
-        name: 'homeIndex',
-        component: () => import('@/views/home/homeIndex.vue')
+        path: "/",
+        component: () => import('@/views/layout/layOut.vue'),
+        children:[
+            {
+                path:"/home",
+                name: 'homeIndex',
+                component: () => import('@/views/home/homeIndex.vue'),
+            }
+        ]
     }
 ];
 
