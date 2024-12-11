@@ -1,5 +1,5 @@
 <script setup>
-import {NModal, NButton, NGrid, NGridItem, NFlex, NText} from "naive-ui";
+import {NModal, NButton, NGrid, NGridItem, NFlex, NText,NA} from "naive-ui";
 import {ref} from "vue";
 import {useWalletState} from "suiue";
 import {loginByAddress} from "@/api/user";

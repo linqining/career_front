@@ -50,7 +50,7 @@ export const publicRoutes= [
                 }
             },
         ]
-    }
+    },
 ];
 
 const router = createRouter({
