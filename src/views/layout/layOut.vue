@@ -13,14 +13,20 @@ import { ref } from 'vue'
 import 'vfonts/Lato.css'
 import {NModal, NButton, NGrid, NGridItem, NFlex, NText} from "naive-ui";
 import {useWalletQuery} from "suiue";
+// import {loginByAddress} from "@/api/user";
 
-const showModal = ref(false)
 
 const {isConnected, address, connect, disconnect, wallets} = useWalletState();
 const {domain} = useWalletQuery()
 
+const showModal = ref(false)
+
 const toggleModal = () => {
   showModal.value = !showModal.value
+}
+const connectSuccess = ()=>{
+  toggleModal();
+  // loginByAddress({"address":address})
 }
 
 var mouseIn = false
@@ -97,7 +103,7 @@ var mouseIn = false
                 :y-gap="24"
             >
               <n-grid-item v-for="wallet in wallets" :key="JSON.stringify(wallet.chains)">
-                <n-button @click="connect(wallet).then(toggleModal)" style="height: 114px; width: 100%">
+                <n-button @click="connect(wallet).then(connectSuccess())" style="height: 114px; width: 100%">
                   <n-flex style="height: 100%; width: 100%;" vertical size="large">
                     <img style="width: 58px; margin: auto" :src="wallet.icon" :alt="wallet.name">
                     <n-text>{{ wallet.name }}</n-text>

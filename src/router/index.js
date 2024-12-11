@@ -9,16 +9,16 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 export const publicRoutes= [
     ...LoginRouter,
     ...TestRouter,
-    // {
-    //     path: '/home',
-    //     name: 'homeIndex',
-    //     component: () => import('@/views/home/homeIndex.vue'),
-    //
-    // },
     {
-        path: "/",
+        path: "",
         component: () => import('@/views/layout/layOut.vue'),
         children:[
+            {
+                path:"",
+                name: 'indexPage',
+                component: () => import('@/views/home/homeIndex.vue'),
+                redirect: '/home'
+            },
             {
                 path:"/home",
                 name: 'homeIndex',
