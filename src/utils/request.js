@@ -1,47 +1,49 @@
 import axios from 'axios' // 引入axios
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useUserStore } from '@/pinia/modules/user'
-import router from '@/router/index'
-import { ElLoading } from 'element-plus'
+import router from '@/router'
+// import { ElLoading } from 'element-plus'
 
 const service = axios.create({
-  baseURL: import.meta.env.VITE_BASE_API,
+  baseURL: "http://localhost:8888/",
   timeout: 99999
 })
-let activeAxios = 0
-let timer
-let loadingInstance
-const showLoading = (
-  option = {
-    target: null
-  }
-) => {
-  const loadDom = document.getElementById('gva-base-load-dom')
-  activeAxios++
-  if (timer) {
-    clearTimeout(timer)
-  }
-  timer = setTimeout(() => {
-    if (activeAxios > 0) {
-      if (!option.target) option.target = loadDom
-      loadingInstance = ElLoading.service(option)
-    }
-  }, 400)
-}
 
-const closeLoading = () => {
-  activeAxios--
-  if (activeAxios <= 0) {
-    clearTimeout(timer)
-    loadingInstance && loadingInstance.close()
-  }
-}
+// let activeAxios = 0
+// let timer
+// let loadingInstance
+// const showLoading = (
+//   option = {
+//     target: null
+//   }
+// ) => {
+//   const loadDom = document.getElementById('gva-base-load-dom')
+//   activeAxios++
+//   if (timer) {
+//     clearTimeout(timer)
+//   }
+//   timer = setTimeout(() => {
+//     if (activeAxios > 0) {
+//       if (!option.target) option.target = loadDom
+//       loadingInstance = ElLoading.service(option)
+//     }
+//   }, 400)
+// }
+
+// const closeLoading = () => {
+//   activeAxios--
+//   if (activeAxios <= 0) {
+//     clearTimeout(timer)
+//     loadingInstance && loadingInstance.close()
+//   }
+// }
 // http request 拦截器
 service.interceptors.request.use(
   (config) => {
-    if (!config.donNotShowLoading) {
-      showLoading(config.loadingOption)
-    }
+    // if (!config.donNotShowLoading) {
+    //   showLoading(config.loadingOption)
+    // }
+    // showLoading(config.loadingOption)
     const userStore = useUserStore()
     config.headers = {
       'Content-Type': 'application/json',
@@ -52,14 +54,16 @@ service.interceptors.request.use(
     return config
   },
   (error) => {
-    if (!error.config.donNotShowLoading) {
-      closeLoading()
-    }
+    // if (!error.config.donNotShowLoading) {
+    //   closeLoading()
+    // }
+    // closeLoading()
     ElMessage({
       showClose: true,
       message: error,
       type: 'error'
     })
+    console.log("req",error)
     return error
   }
 )
@@ -68,9 +72,10 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response) => {
     const userStore = useUserStore()
-    if (!response.config.donNotShowLoading) {
-      closeLoading()
-    }
+    // if (!response.config.donNotShowLoading) {
+    //   closeLoading()
+    // }
+    // closeLoading()
     if (response.headers['new-token']) {
       userStore.setToken(response.headers['new-token'])
     }
@@ -89,9 +94,10 @@ service.interceptors.response.use(
     }
   },
   (error) => {
-    if (!error.config.donNotShowLoading) {
-      closeLoading()
-    }
+    // if (!error.config.donNotShowLoading) {
+    //   closeLoading()
+    // }
+    // closeLoading()
 
     if (!error.response) {
       ElMessageBox.confirm(
@@ -107,6 +113,7 @@ service.interceptors.response.use(
           cancelButtonText: '取消'
         }
       )
+      console.log("resp",error)
       return
     }
 

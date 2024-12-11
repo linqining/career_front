@@ -1,13 +1,13 @@
 import { asyncRouterHandle } from '@/utils/asyncRouter'
-import { emitter } from '@/utils/bus.js'
+// import { emitter } from '@/utils/bus.js'
 import { asyncMenu } from '@/api/menu'
 import { defineStore } from 'pinia'
 import { ref, watchEffect } from 'vue'
-import pathInfo from '@/pathInfo.json'
+// import pathInfo from '@/pathInfo.json'
 
 const notLayoutRouterArr = []
-const keepAliveRoutersArr = []
-const nameMap = {}
+// const keepAliveRoutersArr = []
+// const nameMap = {}
 
 const formatRouter = (routes, routeMap, parent) => {
   routes &&
@@ -28,37 +28,37 @@ const formatRouter = (routes, routeMap, parent) => {
     })
 }
 
-const KeepAliveFilter = (routes) => {
-  routes &&
-    routes.forEach((item) => {
-      // 子菜单中有 keep-alive 的，父菜单也必须 keep-alive，否则无效。这里将子菜单中有 keep-alive 的父菜单也加入。
-      if (
-        (item.children && item.children.some((ch) => ch.meta.keepAlive)) ||
-        item.meta.keepAlive
-      ) {
-        const path = item.meta.path
-        keepAliveRoutersArr.push(pathInfo[path])
-        nameMap[item.name] = pathInfo[path]
-      }
-      if (item.children && item.children.length > 0) {
-        KeepAliveFilter(item.children)
-      }
-    })
-}
+// const KeepAliveFilter = (routes) => {
+//   routes &&
+//     routes.forEach((item) => {
+//       // 子菜单中有 keep-alive 的，父菜单也必须 keep-alive，否则无效。这里将子菜单中有 keep-alive 的父菜单也加入。
+//       if (
+//         (item.children && item.children.some((ch) => ch.meta.keepAlive)) ||
+//         item.meta.keepAlive
+//       ) {
+//         const path = item.meta.path
+//         keepAliveRoutersArr.push(pathInfo[path])
+//         nameMap[item.name] = pathInfo[path]
+//       }
+//       if (item.children && item.children.length > 0) {
+//         KeepAliveFilter(item.children)
+//       }
+//     })
+// }
 
 export const useRouterStore = defineStore('router', () => {
-  const keepAliveRouters = ref([])
+  // const keepAliveRouters = ref([])
   const asyncRouterFlag = ref(0)
-  const setKeepAliveRouters = (history) => {
-    const keepArrTemp = []
-    history.forEach((item) => {
-      if (nameMap[item.name]) {
-        keepArrTemp.push(nameMap[item.name])
-      }
-    })
-    keepAliveRouters.value = Array.from(new Set(keepArrTemp))
-  }
-  emitter.on('setKeepAlive', setKeepAliveRouters)
+  // const setKeepAliveRouters = (history) => {
+  //   const keepArrTemp = []
+  //   history.forEach((item) => {
+  //     if (nameMap[item.name]) {
+  //       keepArrTemp.push(nameMap[item.name])
+  //     }
+  //   })
+  //   keepAliveRouters.value = Array.from(new Set(keepArrTemp))
+  // }
+  // emitter.on('setKeepAlive', setKeepAliveRouters)
 
   const asyncRouters = ref([])
 
@@ -131,7 +131,7 @@ export const useRouterStore = defineStore('router', () => {
       baseRouter.push(...notLayoutRouterArr)
     }
     asyncRouterHandle(baseRouter)
-    KeepAliveFilter(asyncRouter)
+    // KeepAliveFilter(asyncRouter)
     asyncRouters.value = baseRouter
     return true
   }
@@ -142,7 +142,7 @@ export const useRouterStore = defineStore('router', () => {
     topMenu,
     leftMenu,
     asyncRouters,
-    keepAliveRouters,
+    // keepAliveRouters,
     asyncRouterFlag,
     SetAsyncRouter,
     routeMap

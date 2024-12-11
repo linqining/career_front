@@ -11,14 +11,13 @@ export const login = (data) => {
   })
 }
 
-
 // @Summary 用户登录
 // @Produce  application/json
 // @Param data body {address:"string"}
-// @Router /base/login [post]
+// @Router /base/loginByAddress [post]
 export const loginByAddress = (data) => {
   return service({
-    url: '/base/loginByAddress',
+    url: 'user_info/loginByAddress',
     method: 'post',
     data: data
   })

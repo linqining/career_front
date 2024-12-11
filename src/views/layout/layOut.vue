@@ -1,19 +1,11 @@
 <script setup >
 import { useWalletState} from "suiue"
-// const {isConnected, } = useWalletState()
-// import {NConnectButton} from "@/views/suise/components/nConnectButton.vue"
-// const {loadAllBalance, loadAllObjects, loadAllCoins} = useWalletQuery()
-//
-// onConnect(() => {
-//   loadAllBalance()
-//   loadAllObjects()
-//   loadAllCoins()
-// })
 import { ref } from 'vue'
 import 'vfonts/Lato.css'
 import {NModal, NButton, NGrid, NGridItem, NFlex, NText} from "naive-ui";
 import {useWalletQuery} from "suiue";
-// import {loginByAddress} from "@/api/user";
+import {loginByAddress} from "@/api/user";
+import router from "@/router";
 
 
 const {isConnected, address, connect, disconnect, wallets} = useWalletState();
@@ -24,9 +16,22 @@ const showModal = ref(false)
 const toggleModal = () => {
   showModal.value = !showModal.value
 }
+
+if (!address._value){
+  console.log("not connect")
+  router.push({ path: '/login'})
+}else{
+  console.log("loginedaddress",address._value)
+}
+
 const connectSuccess = ()=>{
   toggleModal();
-  // loginByAddress({"address":address})
+  // TODO 仅demo展示，安全风险
+  loginByAddress({"address":address._value}).then(res=>{
+    console.log(res);
+  }).catch(err=>{
+    console.log(err);
+  })
 }
 
 var mouseIn = false

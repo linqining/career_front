@@ -1,13 +1,13 @@
 // import  { App } from 'vue';
 // 引入 login.ts
-import LoginRouter from './modules/login';
+// import LoginRouter from './modules/login';
 
 // 引入 test.ts
 import TestRouter from './modules/test';
 import { createRouter, createWebHashHistory } from 'vue-router';
 
 export const publicRoutes= [
-    ...LoginRouter,
+    // ...LoginRouter,
     ...TestRouter,
     {
         path: "",
@@ -23,6 +23,14 @@ export const publicRoutes= [
                 path:"/home",
                 name: 'homeIndex',
                 component: () => import('@/views/home/homeIndex.vue'),
+            },
+            {
+                path: '/login',
+                name: 'loginIndex',
+                component: () => import('@/views/login/loginIndex.vue'),
+                meta: {
+                    title: '登录页'
+                }
             }
         ]
     }
@@ -46,4 +54,7 @@ export function resetRouter() {
 export const setupRouter = (app) => {
     app.use(router);
 };
+
+export default router
+
 
