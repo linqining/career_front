@@ -13,11 +13,23 @@ const {domain} = useWalletQuery()
 
 const showModal = ref(false)
 
+const showTag = ref(1)
+
+const showHomeTag=()=>{
+  showTag.value=1
+}
+const showCompanyTag=()=>{
+  showTag.value=2
+}
+const showProfileTag=()=>{
+  showTag.value=3
+}
+
 const toggleModal = () => {
   showModal.value = !showModal.value
 }
 
-if (!address._value){
+if (!address._value||!isConnected){
   console.log("not connect")
   router.push({ path: '/login'})
 }else{
@@ -54,9 +66,9 @@ var mouseIn = false
         Milao
       </div>
       <div class="header-menu">
-        <a href="#" class="active">Find Job</a>
-        <a href="#">Company Review</a>
-        <a href="#">Find Salaries</a>
+        <router-link to="home" :class="{active:showTag==1}" @click="showHomeTag">首页</router-link>
+        <router-link to="company"  :class="{active:showTag==2}" @click="showCompanyTag">公司</router-link>
+        <router-link to="profile" :class="{active:showTag==3}" @click="showProfileTag">我的</router-link>
       </div>
       <div class="user-settings">
         <div class="dark-light">

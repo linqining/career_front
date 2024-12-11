@@ -3,12 +3,10 @@
 // import LoginRouter from './modules/login';
 
 // 引入 test.ts
-import TestRouter from './modules/test';
+// import TestRouter from './modules/test';
 import { createRouter, createWebHashHistory } from 'vue-router';
 
 export const publicRoutes= [
-    // ...LoginRouter,
-    ...TestRouter,
     {
         path: "",
         component: () => import('@/views/layout/layOut.vue'),
@@ -23,6 +21,9 @@ export const publicRoutes= [
                 path:"/home",
                 name: 'homeIndex',
                 component: () => import('@/views/home/homeIndex.vue'),
+                meta: {
+                    title: '首页'
+                }
             },
             {
                 path: '/login',
@@ -31,7 +32,23 @@ export const publicRoutes= [
                 meta: {
                     title: '登录页'
                 }
-            }
+            },
+            {
+                path: '/profile',
+                name: 'profileIndex',
+                component: () => import('@/views/profile/profileIndex.vue'),
+                meta: {
+                    title: '个人主页'
+                }
+            },
+            {
+                path:"/company",
+                name: 'companyIndex',
+                component: () => import('@/views/company/companyIndex.vue'),
+                meta: {
+                    title: '公司'
+                }
+            },
         ]
     }
 ];
