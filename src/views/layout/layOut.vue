@@ -21,6 +21,9 @@ const showHomeTag=()=>{
 const showCompanyTag=()=>{
   showTag.value=2
 }
+
+
+// const {objects} = useWalletQuery();
 const showProfileTag=()=>{
   showTag.value=3
 }
@@ -53,6 +56,8 @@ var mouseIn = false
 @import "../../style/home/style.css";
 </style>
 <style rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"></style>
+<style rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"/>
+
 <template>
   <!-- partial:index.partial.html -->
   <div class="job">

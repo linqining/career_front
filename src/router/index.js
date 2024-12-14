@@ -39,7 +39,7 @@ export const publicRoutes= [
                 component: () => import('@/views/profile/profileIndex.vue'),
                 meta: {
                     title: '个人主页'
-                }
+                },
             },
             {
                 path:"/company",
