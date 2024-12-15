@@ -1,6 +1,6 @@
 <script setup >
 import { useWalletState} from "suiue"
-import { ref } from 'vue'
+import { ref,watch } from 'vue'
 import 'vfonts/Lato.css'
 import {NModal, NButton, NGrid, NGridItem, NFlex, NText} from "naive-ui";
 import {useWalletQuery} from "suiue";
@@ -32,17 +32,36 @@ const toggleModal = () => {
   showModal.value = !showModal.value
 }
 
-if (!address._value||!isConnected){
-  console.log("not connect")
-  router.push({ path: '/login'})
+if (!address.value||!isConnected){
+  console.log("not connect");
+  router.push({ path: '/login'});
 }else{
-  console.log("loginedaddress",address._value)
+  console.log("loginedaddress",address.value)
+}
+
+watch(isConnected,(oldV,newV)=>{
+  if (!address.value||!isConnected){
+    console.log("not connect")
+    router.push({ path: '/login'})
+  }else{
+    console.log("loginedaddress",address.value)
+  }
+},{ deep: true,immediate:true })
+
+
+const disconnSuccess =()=>{
+  console.log("disconnect")
 }
 
 const connectSuccess = ()=>{
   toggleModal();
+
+  // console.log(globalLogin)
+  // globalLogin.setLogin(false)
+  // setupLogin();
+  // console.log(setupLogin)
   // TODO 仅demo展示，安全风险
-  loginByAddress({"address":address._value}).then(res=>{
+  loginByAddress({"address":address.value}).then(res=>{
     console.log(res);
   }).catch(err=>{
     console.log(err);
@@ -86,12 +105,11 @@ var mouseIn = false
         </div>
         <img class="user-profile" src="../../assets/img/tx.png" alt="">
         <div class="user-name">
-<!--          钱包{{isConnected}}<n-connect-button>钱包</n-connect-button>-->
             <n-button
                 v-bind="$attrs"
                 @mouseenter="mouseIn = true"
                 @mouseleave="mouseIn = false"
-                @click="isConnected ? disconnect() : toggleModal()"
+                @click="isConnected ? disconnect().then(disconnSuccess()) : toggleModal()"
                 style="width: 128px"
                 >
                 <template v-if="!mouseIn">

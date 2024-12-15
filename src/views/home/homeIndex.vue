@@ -177,8 +177,8 @@
             <button class="search-buttons detail-button">Senior Level</button>
           </div>
           <div class="job-card-buttons">
-            <button class="search-buttons card-buttons">Apply Now</button>
-            <button class="search-buttons card-buttons-msg">Messages</button>
+            <button class="search-buttons card-buttons" @click="router.push({'path':'/application/'+item.id})">申请</button>
+            <button class="search-buttons card-buttons-msg">消息</button>
           </div>
         </div>
 
@@ -460,6 +460,7 @@
 </template>
 
 <script setup>
+import router from '@/router/index'
 import {ListJobs} from "@/api/job/job.go";
 
 import { useWalletState} from "suiue"
@@ -472,7 +473,7 @@ const jobList = ref([])
 const {address} = useWalletState();
 
 function reloadList(){
-  ListJobs({"address":address._value}).then(resp=>{
+  ListJobs({"address":address.value}).then(resp=>{
     jobList.value = resp.data
     console.log("jobList.value",jobList.value)
   }).catch(e=>{

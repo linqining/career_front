@@ -10,7 +10,7 @@ const {address, connect, wallets} = useWalletState();
 
 const connectSuccess = ()=>{
   // TODO 仅demo展示，安全风险
-  loginByAddress({"address":address._value}).then(res=>{
+  loginByAddress({"address":address.value}).then(res=>{
     console.log(res);
   }).catch(err=>{
     console.log(err);
