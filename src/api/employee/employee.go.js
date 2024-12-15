@@ -108,3 +108,12 @@ export const getEmployeePublic = () => {
     method: 'get',
   })
 }
+
+
+export const updateContractDigest = (data) => {
+  return service({
+    url: '/employeeInfo/updateContractDigest',
+    method: 'POST',
+    data
+  })
+}
