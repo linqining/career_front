@@ -1,50 +1,61 @@
 <template>
   <div>
-    <div class="position">我的Offer</div>
-    <el-row :gutter="20">
-      <el-col :span="5" v-for="(item, index) in offers" :key="index" >
-        <el-card :body-style="{ padding: '2px' }">
-          <div style="padding: 14px;">
-            <div>
-              <span>雇主:</span> <span>{{item.contents.publisher}}</span>
-            </div>
-            <div>
-              <span>JD文件:</span> <el-link :href="'https://aggregator.walrus-testnet.walrus.space/v1/'+item.contents.desc">下载文件</el-link>
-            </div>
-            <div><span>Offer截止时间:</span>{{showDeadLine(item.contents.deadline_ms)}}</div>
-            <div class="bottom clearfix">
-              <el-button type="success" >
-                <el-link :href="`https://suivision.xyz/object/`+item.id" target="_blank">查看</el-link>
-              </el-button>
-              <el-button type="success" @click="signContract(item)">
-                签合同
-              </el-button>
-            </div>
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
+    <el-button @click="refresh" type="primary" style="width: 50px;margin: 10px;float: right;">加载</el-button>
   </div>
+    <el-tabs type="border-card">
+      <el-tab-pane label="我的Offer">
+        <el-row :gutter="20">
+          <el-col :span="5" v-for="(item, index) in offers" :key="index" >
+            <el-card :body-style="{ padding: '2px' }">
+              <div style="padding: 14px;">
+                <div>
+                  <span>雇主:</span><span>
+                  <el-link :href="`https://suivision.xyz/object/`+item.contents.publisher" target="_blank">{{company_map[item.contents.publisher].name}}</el-link>
+                  </span>
+                  <el-image :src="company_map[item.contents.publisher].logo"></el-image>
+                </div>
+                <div>
+                  <span>JD文件:</span> <el-link :href="'https://aggregator.walrus-testnet.walrus.space/v1/'+item.contents.desc">下载文件</el-link>
+                </div>
+                <div><span>Offer截止时间:</span>{{showDeadLine(item.contents.deadline_ms)}}</div>
+                <div class="bottom clearfix">
+                  <el-button type="success" >
+                    <el-link :href="`https://suivision.xyz/object/`+item.id" target="_blank">查看</el-link>
+                  </el-button>
+                  <el-button type="success" @click="signContract(item)">
+                    签合同
+                  </el-button>
+                </div>
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
 
-  <div>
-    <div class="position">我的合同</div>
-    <el-row :gutter="20">
-      <el-col :span="5" v-for="(item, index) in contracts" :key="index" >
-        <el-card :body-style="{ padding: '2px' }">
-          <div style="padding: 14px;">
-            <div>
-              <span>雇主:</span> <span>{{item.contents.employer}}</span>
-            </div>
-            <div>
-              <span>Offer:</span> <span>{{item.contents.offer_id}}</span>
-            </div>
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
-  </div>
-
-  <n-button @click="refresh">刷新</n-button>
+      </el-tab-pane>
+        <el-tab-pane label="我的合同">
+        <el-row :gutter="20">
+          <el-col :span="5" v-for="(item, index) in contracts" :key="index" >
+            <el-card :body-style="{ padding: '2px' }">
+              <div style="padding: 14px;">
+                <div>
+                  <span>雇主:</span><span>
+                  <el-link :href="`https://suivision.xyz/object/`+item.contents.employer" target="_blank">{{company_map[item.contents.employer].name}}</el-link>
+                  </span>
+                  <el-image :src="company_map[item.contents.employer].logo"></el-image>
+                </div>
+                <div>
+                  <span>Offer:</span><span>
+                                    <el-button type="success" >
+                    <el-link :href="`https://suivision.xyz/object/`+item.contents.offer_id" target="_blank">查看</el-link>
+                  </el-button>
+                  </span>
+                </div>
+              </div>
+            </el-card>
+          </el-col>
+        </el-row>
+      </el-tab-pane>
+    </el-tabs>
 </template>
 
 <script setup>
@@ -66,10 +77,31 @@ const offers = ref([])
 
 const contracts = ref([])
 
+const company_map = ref({})
+
 const refresh = ()=>{
   loadAllObjects();
-  offers.value = filteredOffers();
-  contracts.value = filteredContracts();
+  const offer_list= filteredOffers();
+  const contract_list = filteredContracts();
+  const address =[];
+  for (var offerIndex in offers.value){
+    address.push(offers.value[offerIndex].contents.publisher)
+  }
+  for (var contractIndex in contracts.value){
+    address.push(contracts.value[contractIndex].contents.employer)
+  }
+  console.log(address)
+  batchGetByAddress({"addresses":address}).then((res)=>{
+    if (res.code==0){
+      for(var itemIdx in res.data.list){
+        const item = res.data.list[itemIdx];
+        company_map.value[item["walletAddress"]]=item;
+      }
+      offers.value = offer_list;
+      contracts.value= contract_list;
+    }
+  })
+  console.log("company_map",company_map)
 }
 
 const filteredOffers = () => {
@@ -116,6 +148,8 @@ const showDeadLine=(deadLineMs)=>{
   return today
 }
 import {updateContractDigest} from "@/api/employee/employee.go"
+import {batchGetByAddress} from "@/api/company/company.go";
+
 const signContract=(data)=>{
   if (!isConnected.value){
     ElMessage({

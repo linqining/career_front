@@ -1,52 +1,65 @@
 <template>
   <div>
-    <div class="position">获得证书</div>
-    <el-row :gutter="20">
-      <el-col :span="5" v-for="(item, index) in certificates" :key="index" >
-        <el-card :body-style="{ padding: '2px' }">
-          <el-image :src="item.display.image_url" class="image"></el-image>
-          <div style="padding: 14px;">
-            <div>
-              <span>授予人:</span> <span>{{item.display.qualifier_name}}</span>
-            </div>
-            <div><span>照片</span><el-image :src="item.display.qualifier_image_url"></el-image></div>
-            <div class="bottom clearfix">
-              <el-button type="success" >
-                <el-link :href="`https://suivision.xyz/object/`+item.id" target="_blank">查看</el-link>
-              </el-button>
-            </div>
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
+    <el-button @click="refresh" type="primary" style="width: 50px;margin: 10px;float: right;">加载</el-button>
   </div>
+  <el-tabs type="border-card">
+    <el-tab-pane label="获得证书">
+      <el-row :gutter="0" >
+        <el-col :span="6" v-for="(item, index) in certificates" :key="index" >
+          <div style="padding: 10px">
+            <el-card :body-style="{ padding: '2px' }">
 
-  <div>
-    <div class="position">获得荣誉</div>
-    <el-row :gutter="20">
-      <el-col :span="5" v-for="(item, index) in achievements" :key="index" >
-        <el-card :body-style="{ padding: '2px' }">
-          <el-image :src="item.contents.image_url" class="image"></el-image>
-          <div style="padding: 14px;">
-            <div>
-              <span>荣誉:</span> <span>{{item.contents.desc}}</span>
-            </div>
-            <div><span>奖金:</span><span>{{item.contents.prize.value/consts.MIST_PER_SUI}}SUI</span></div>
-            <div class="bottom clearfix">
-              <el-button type="success" >
-                <el-link :href="`https://suivision.xyz/object/`+item.id" target="_blank">查看</el-link>
-              </el-button>
-              <el-button type="success" v-if="item.contents.prize.value>0" @click="withDraw(item)">
-                提取奖金
-              </el-button>
-            </div>
+              <div style="padding: 14px;">
+                <div>
+                  <div>
+                    <span>证书:</span> <span>{{item.type.split("::")[1]}}</span>
+                  </div>
+                  <el-image :src="item.display.image_url" ></el-image>
+                </div>
+                <div>
+                  <span>授予人:</span> <span>{{item.display.qualifier_name}}</span>
+                </div>
+                <div><span>照片:</span><el-image :src="item.display.qualifier_image_url"></el-image></div>
+                <div class="bottom clearfix">
+                  <el-button type="success" >
+                    <el-link :href="`https://suivision.xyz/object/`+item.id" target="_blank">查看</el-link>
+                  </el-button>
+                </div>
+              </div>
+            </el-card>
           </div>
-        </el-card>
-      </el-col>
-    </el-row>
-  </div>
+        </el-col>
+      </el-row>
+    </el-tab-pane>
+    <el-tab-pane label="获得荣誉">
+      <el-row :gutter="0" >
+        <el-col :span="6" v-for="(item, index) in achievements" :key="index" >
+          <div style="padding: 10px">
+            <el-card :body-style="{ padding: '2px' }" shadow="always" style="padding: 10px">
+              <el-image :src="item.contents.image_url" class="image" ></el-image>
+              <div style="padding: 14px;">
+                <div>
+                  <span>荣誉:</span> <span>{{item.contents.desc}}</span>
+                </div>
+                <div><span>奖金:</span><span>{{item.contents.prize.value/consts.MIST_PER_SUI}}SUI</span></div>
+                <div class="bottom clearfix">
+                  <el-space spacer="|">
+                      <el-button type="success" >
+                        <el-link :href="`https://suivision.xyz/object/`+item.id" target="_blank">查看</el-link>
+                      </el-button>
+                      <el-button type="success" v-if="item.contents.prize.value>0" @click="withDraw(item)">
+                        提取奖金
+                      </el-button>
+                  </el-space>
+                </div>
+              </div>
+            </el-card>
+          </div>
+        </el-col>
+      </el-row>
+    </el-tab-pane>
+  </el-tabs>
 
-  <n-button @click="refresh">刷新</n-button>
 
   <el-dialog title="提取奖金" v-model="withdrawDialogVisible">
     <el-tag type="success">{{formData.obj.contents.desc}}</el-tag>
@@ -67,7 +80,7 @@
 
 <script setup>
 import {useWalletQuery,useWalletState,consts,useWalletActions} from "suiue";
-import {ElCard, ElImage, ElRow, ElButton, ElCol, ElMessage} from "element-plus";
+import {ElCard, ElImage, ElRow, ElButton, ElCol, ElMessage,ElSpace} from "element-plus";
 import { ref,watch } from "vue";
 const {objects,loadAllObjects} = useWalletQuery();
 const {isConnected} = useWalletState();
